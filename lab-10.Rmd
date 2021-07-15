@@ -14,14 +14,98 @@ library(openintro)
 ```
 
 ### Exercise 1
+```{r}
+evals2<-evals
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+rr<-linear_reg(mode="regression") %>%
+  set_engine("lm")
+
+hey<-rr %>%
+  fit(score~bty_avg, data=evals2)
+  
+hey
+summary(hey$fit)
+```
 
 ### Exercise 2
+```{R}
 
-...
 
-Add exercise headings as needed.
+rr<-linear_reg(mode="regression") %>%
+  set_engine("lm")
+
+hey2<-rr %>%
+  fit(score~bty_avg+factor(gender), data=evals2)
+  
+hey2
+summary(hey2$fit)
+
+
+rr<-linear_reg(mode="regression") %>%
+  set_engine("lm")
+
+hey2<-rr %>%
+  fit(score~bty_avg+factor(gender), data=evals2)
+
+#try<-lm(score~factor(gender)+bty_avg, data=evals2)
+#summary(try)
+  
+hey2
+summary(hey2$fit)
+```
+
+##ex10
+
+```{r}
+
+
+
+
+rr<-linear_reg(mode="regression") %>%
+  set_engine("lm")
+
+m_bty_rank<-rr %>%
+  fit(score~bty_avg+rank, data=evals2)
+  
+m_bty_rank
+summary(m_bty_rank$fit)
+
+
+```
+
+##ex11,12
+
+```{r}
+
+subset1<-subset(
+  evals2,select=c(rank, ethnicity, gender, language, age, cls_perc_eval, cls_did_eval, cls_students, cls_level, cls_profs, cls_credits, bty_avg))
+
+t<-rr %>%
+  fit(score~cls_profs, data=evals2)
+
+t
+
+glance(t$fit)
+
+
+```
+
+
+##ex14
+
+```{r}
+
+ex14<- rr %>%
+  fit(score~rank+ethnicity+gender+language+age+
+        cls_perc_eval+cls_students+cls_level + cls_profs+
+        cls_credits+bty_avg, data=evals2 )
+summary(ex14$fit)
+
+back<-lm(score~factor(rank)+factor(ethnicity)+factor(gender)+factor(language)+age+
+        cls_perc_eval+cls_students+factor(cls_level) + factor(cls_profs)+
+        factor(cls_credits)+bty_avg, data=evals2 )
+
+summary(back)
+
+back2<-stats::step(back, direction="backward")
+```
