@@ -11,6 +11,7 @@ output: github_document
 library(tidyverse) 
 library(tidymodels)
 library(openintro)
+library(openintro)
 ```
 
 ### Exercise 1
@@ -20,12 +21,14 @@ evals2<-evals
 rr<-linear_reg(mode="regression") %>%
   set_engine("lm")
 
-hey<-rr %>%
+m_bty<-rr %>%
   fit(score~bty_avg, data=evals2)
   
-hey
-summary(hey$fit)
+m_bty
+summary(m_bty$fit)
 ```
+Multiple R-squared:  0.03502,	Adjusted R-squared:  0.03293 
+y=3.88+0.07bty_avg
 
 ### Exercise 2
 ```{R}
@@ -34,25 +37,27 @@ summary(hey$fit)
 rr<-linear_reg(mode="regression") %>%
   set_engine("lm")
 
-hey2<-rr %>%
+m_bty_gen<-rr %>%
   fit(score~bty_avg+factor(gender), data=evals2)
   
-hey2
-summary(hey2$fit)
+m_bty_gen
+summary(m_bty_gen$fit)
 
 
-rr<-linear_reg(mode="regression") %>%
-  set_engine("lm")
-
-hey2<-rr %>%
-  fit(score~bty_avg+factor(gender), data=evals2)
-
-#try<-lm(score~factor(gender)+bty_avg, data=evals2)
-#summary(try)
-  
-hey2
-summary(hey2$fit)
 ```
+Multiple R-squared:  0.05912,	Adjusted R-squared:  0.05503 
+y=3.74+0.07*bty_evg + 0.17*gender
+5%
+male
+y=3.74+0.17+0.07*bty_evg
+male
+being a male is beneficial to get a high score, when the beaty score is the same. 
+
+8
+adding gender variable is beneficial for get a higher R^2
+
+9
+not that much 
 
 ##ex10
 
@@ -72,26 +77,29 @@ summary(m_bty_rank$fit)
 
 
 ```
+y = 3.98 + 0.06bty_avg -0.16 rank(tenure track) - 0.12rank(tenured)
+
+compared to the reference group, 
+being a tenure tract or tenured is detrimental to y
+
 
 ##ex11,12
 
 ```{r}
 
-subset1<-subset(
-  evals2,select=c(rank, ethnicity, gender, language, age, cls_perc_eval, cls_did_eval, cls_students, cls_level, cls_profs, cls_credits, bty_avg))
-
-t<-rr %>%
-  fit(score~cls_profs, data=evals2)
-
-t
-
-glance(t$fit)
 
 
+ci <- lm(score ~ cls_profs, data=evals2)
+summary(ci)
 ```
+p=0.58... cls_profs is not significant predictor to score.
 
 
-##ex14
+13
+cls_did eval may overlapped with other predictors. 
+
+
+##ex1415
 
 ```{r}
 
@@ -101,6 +109,10 @@ ex14<- rr %>%
         cls_credits+bty_avg, data=evals2 )
 summary(ex14$fit)
 
+```
+
+```{r}
+
 back<-lm(score~factor(rank)+factor(ethnicity)+factor(gender)+factor(language)+age+
         cls_perc_eval+cls_students+factor(cls_level) + factor(cls_profs)+
         factor(cls_credits)+bty_avg, data=evals2 )
@@ -108,4 +120,18 @@ back<-lm(score~factor(rank)+factor(ethnicity)+factor(gender)+factor(language)+ag
 summary(back)
 
 back2<-stats::step(back, direction="backward")
+
+back2$anova
+
+#final model 
+
+back2$coefficients
 ```
+
+being a male is beneficial to score about 0.18 to score while other things are equal. 
+one unit increase in bty_avg is related in 0.06 increase in the score while other things are equal. 
+
+typically, not being an moniroty,being male, engislh, and young, and  one credit, and good looking professors get higher scores. 
+
+No.
+Need more data from different university, region..etc. 
